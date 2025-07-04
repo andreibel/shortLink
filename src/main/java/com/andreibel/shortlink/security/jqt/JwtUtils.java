@@ -14,6 +14,9 @@ import java.security.Key;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+/**
+ * Utility class for handling JWT operations such as token generation, extraction, and validation.
+ */
 @Component
 public class JwtUtils {
 
@@ -25,6 +28,12 @@ public class JwtUtils {
 
 
     //Authorization -> Bearer <token>
+    /**
+     * Extracts the JWT token from the Authorization header of the HTTP request.
+     *
+     * @param request the HTTP request
+     * @return the JWT token if present, otherwise null
+     */
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -33,6 +42,12 @@ public class JwtUtils {
         return null;
     }
 
+    /**
+     * Generates a JWT token for the given user details.
+     *
+     * @param userDetails the user details
+     * @return the generated JWT token
+     */
     public String generateToken(UserDetails userDetails) {
         // Implement JWT token generation logic here
         // This is a placeholder; actual implementation will depend on your JWT library
@@ -48,6 +63,12 @@ public class JwtUtils {
                 .signWith(key())
                 .compact();
     }
+    /**
+     * Extracts the username from the given JWT token.
+     *
+     * @param token the JWT token
+     * @return the username contained in the token
+     */
     public String getUsernameFromJwtToken(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) key())
@@ -57,6 +78,13 @@ public class JwtUtils {
                 .getSubject();
     }
 
+    /**
+     * Validates the given JWT token.
+     *
+     * @param authToken the JWT token to validate
+     * @return true if the token is valid, false otherwise
+     * @throws RuntimeException if the token is invalid or parsing fails
+     */
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().verifyWith((SecretKey)key())

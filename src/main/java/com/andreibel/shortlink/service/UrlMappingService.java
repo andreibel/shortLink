@@ -18,12 +18,22 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 
+/**
+ * Service for managing URL mappings and click events.
+ */
 @Service
 @AllArgsConstructor
 public class UrlMappingService {
     private UrlMappingRepository urlMappingRepository;
     private ClickEventRepository clickEventRepository;
 
+    /**
+     * Creates a new short URL mapping for the given original URL and user.
+     *
+     * @param originalUrl the original URL to shorten
+     * @param user the user creating the short URL
+     * @return the created UrlMappingDTO
+     */
     public UrlMappingDTO createShortUrl(String originalUrl, User user) {
         String shortUrl = generateShortUrl();
         UrlMapping urlMapping = new UrlMapping();
@@ -35,6 +45,12 @@ public class UrlMappingService {
         return convertMapToDto(saved);
     }
 
+    /**
+     * Retrieves all URL mappings for a given user.
+     *
+     * @param user the user whose URLs to retrieve
+     * @return list of UrlMappingDTOs
+     */
     public List<UrlMappingDTO> getUserUrls(User user) {
         List<UrlMapping> urlMappings = urlMappingRepository.findByUser(user);
         return urlMappings.stream()
@@ -63,6 +79,14 @@ public class UrlMappingService {
         return shortUrl.toString();
     }
 
+    /**
+     * Retrieves click events for a short URL grouped by date within a time range.
+     *
+     * @param shortUrl the short URL
+     * @param start the start datetime
+     * @param end the end datetime
+     * @return list of ClickEventDTOs grouped by date, or null if URL not found
+     */
     public List<ClickEventDTO> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
         if (urlMapping != null) {
@@ -80,7 +104,14 @@ public class UrlMappingService {
         return null;
     }
 
-
+    /**
+     * Retrieves total clicks for all URLs of a user grouped by date within a date range.
+     *
+     * @param user the user
+     * @param start the start date
+     * @param end the end date
+     * @return map of LocalDate to click count
+     */
     public Map<LocalDate, Long> getTotalClicksByUserAndDate(User user, LocalDate start, LocalDate end) {
         List<UrlMapping> urlMappings = urlMappingRepository.findByUser(user);
         List<ClickEvent> clickEvents = clickEventRepository.findByUrlMappingInAndClickDateBetween(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
@@ -89,6 +120,12 @@ public class UrlMappingService {
 
     }
 
+    /**
+     * Retrieves the original URL mapping by its short URL and logs the click event.
+     *
+     * @param shortUrl the short URL
+     * @return the UrlMapping, or null if not found
+     */
     public UrlMapping getOriginalUrlByShortUrl(String shortUrl) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
         if (urlMapping != null) {
