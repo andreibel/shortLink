@@ -42,7 +42,8 @@ const LandingPage = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
                         onClick={dashBoardNavigateHandler}
-                        className="bg-custom-gradient  w-40 text-white rounded-md  py-2"
+
+                        className="bg-custom-gradient  w-40 text-white rounded-md  py-2 hover:bg-custom-gradient-2"
                       >
                           Manage Links
                       </motion.button>

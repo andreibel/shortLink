@@ -5,7 +5,7 @@
 
 @layer utilities {
     .bg-custom-gradient {
-        background: linear-gradient(to right, #3b82f6, #9333ea);
+        background: linear-gradient(to right, #E55D87, #5FC3E4);
     }
 
     .bg-custom-gradient-2 {
