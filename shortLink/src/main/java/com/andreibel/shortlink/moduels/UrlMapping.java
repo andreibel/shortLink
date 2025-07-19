@@ -2,6 +2,7 @@ package com.andreibel.shortlink.moduels;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
-@Table(name = "url_mapping")
+@Table(name = "url_mapping",
+
+        indexes = {
+                @Index(name = "idx_shortUrl", columnList = "shortUrl")
+        })
 public class UrlMapping {
     /**
      * Unique identifier for this URL mapping (auto-generated).

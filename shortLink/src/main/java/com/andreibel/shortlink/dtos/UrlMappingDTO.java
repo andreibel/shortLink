@@ -4,6 +4,7 @@ package com.andreibel.shortlink.dtos;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+
 /**
  * Data Transfer Object for URL mapping information.
  * <p>

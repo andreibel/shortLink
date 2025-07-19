@@ -1,21 +1,27 @@
 import React ,{useState} from 'react';
-import { Link, useLocation, } from 'react-router-dom';
+import {Link, useLocation, useNavigate,} from 'react-router-dom';
 import {IoIosMenu} from 'react-icons/io'
 import {RxCross2} from "react-icons/rx";
+import { FaLink } from "react-icons/fa6";
+import {useStoreContext} from "../contextApi/ContextApi.jsx";
 
 export const NavBar = () => {
+  const navigate = useNavigate();
   const path = useLocation().pathname;
   const [navbarOpen, setNavbarOpen] = useState(false);
-
+  const { token, setToken } = useStoreContext();
   const onLogOutHandler = () => {
-
+    setToken(null);
+    localStorage.removeItem("JWT_TOKEN");
+    setNavbarOpen(false);
+    navigate("/");
   };
 
   return (
     <div className="h-16 bg-custom-gradient  z-50 flex items-center sticky top-0 ">
       <div className="lg:px-14 sm:px-8 px-4 w-full flex justify-between">
         <Link to="/">
-          <h1 className="font-bold text-3xl text-white italic sm:mt-0 mt-2">
+          <h1 className="font-bold text-3xl text-white italic sm:mt-0 mt-2 flex items-center gap-2">
             ShortLink
           </h1>
         </Link>
@@ -46,18 +52,38 @@ export const NavBar = () => {
               About
             </Link>
           </li>
-          <li className=" sm:ml-0 -ml-1 bg-rose-700 text-white  cursor-pointer w-24 text-center font-semibold px-2 py-2 rounded-md  hover:text-slate-300   transition-all duration-150">
+          { !token && <li
+            className=" sm:ml-0 -ml-1 bg-blue-400 text-white  cursor-pointer w-24 text-center font-semibold px-2 py-2 rounded-md  hover:text-slate-300   transition-all duration-150">
             <Link to="/register" onClick={() => setNavbarOpen(false)}>
               SignUp
 
             </Link>
-         </li>
-          <li className=" sm:ml-0 -ml-1 bg-blue-400 text-white  cursor-pointer w-24 text-center font-semibold px-2 py-2 rounded-md  hover:text-slate-300   transition-all duration-150">
+          </li>}
+          { !token && <li
+            className=" sm:ml-0 -ml-1 bg-rose-700 text-white  cursor-pointer w-24 text-center font-semibold px-2 py-2 rounded-md  hover:text-slate-300   transition-all duration-150">
             <Link to="/login" onClick={() => setNavbarOpen(false)}>
               Login
 
             </Link>
-          </li>
+          </li>}
+          {token && (
+            <li
+              className=" sm:ml-0 -ml-1 bg-blue-400 text-white  cursor-pointer w-24 text-center font-semibold px-2 py-2 rounded-md  hover:text-slate-300   transition-all duration-150">
+              <Link to="/dashboard" onClick={() => setNavbarOpen(false)}>
+                DashBoard
+
+              </Link>
+
+              </li>
+          )}
+          {token && (
+            <button
+              onClick={onLogOutHandler}
+
+              className="sm:ml-0 -ml-1 bg-rose-700 text-white  cursor-pointer w-24 text-center font-semibold px-2 py-2 rounded-md  hover:text-slate-300   transition-all duration-150">
+              LogOut
+            </button>
+          )}
         </ul>
         <button
           onClick={() => setNavbarOpen(!navbarOpen)}
