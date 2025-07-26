@@ -1,6 +1,6 @@
 package com.andreibel.shortlink.controller;
 
-import com.andreibel.shortlink.dtos.LoginRequest;
+import com.andreibel.shortlink.dtos.LoginRequestDTO;
 import com.andreibel.shortlink.dtos.RegisterRequest;
 import com.andreibel.shortlink.moduels.User;
 import com.andreibel.shortlink.security.jqt.JwtAuthenticationResponse;
@@ -36,7 +36,7 @@ public class AuthController {
      * or an error message if authentication fails
      */
     @PostMapping("/public/login")
-    public ResponseEntity<?> loginUser(@Validated @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@Validated @RequestBody LoginRequestDTO loginRequest) {
         try {
             JwtAuthenticationResponse jwt = userService.loginUser(loginRequest);
             return ResponseEntity.ok(jwt);

@@ -8,7 +8,7 @@ import lombok.Data;
  * Contains the necessary fields for authenticating a user, including username and password.
  */
 @Data
-public class LoginRequest {
+public class LoginRequestDTO {
     private String username;
     private String password;
 }

@@ -7,12 +7,11 @@ import {
 ChartJS.register(BarElement, Tooltip, CategoryScale, LinearScale, Legend, Filler);
 
 const Graph = ({graphData}) => {
-  const labels = graphData?.map((item) => item.clickDate);
+  const labels = graphData?.map((item) => `${item.clickDate}`);
   const userPerDaya = graphData?.map((item) => item.count);
 
   const data = {
-    labels: graphData.length > 0 ? labels : ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-    datasets: [{
+    labels: graphData.length > 0 ? labels : ["", "", "", "", "", "", "", "", "", "", "", "", "", ""], datasets: [{
       label: "Total Clicks",
       data: graphData.length > 0 ? userPerDaya : [1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1],
       backgroundColor: graphData.length > 0 ? "#3b82f6" : "rgba(54, 162, 235, 0.1)",
@@ -46,8 +45,7 @@ const Graph = ({graphData}) => {
           },
         },
       }, x: {
-        beginAtZero: true,
-        title: {
+        beginAtZero: true, title: {
           display: true, text: "Date", font: {
             family: "Arial", size: 16, weight: "bold", color: "#FF0000",
           },

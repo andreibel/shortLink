@@ -1,7 +1,7 @@
 package com.andreibel.shortlink.service;
 
 
-import com.andreibel.shortlink.dtos.LoginRequest;
+import com.andreibel.shortlink.dtos.LoginRequestDTO;
 import com.andreibel.shortlink.moduels.User;
 import com.andreibel.shortlink.repository.UserRepository;
 import com.andreibel.shortlink.security.jqt.JwtAuthenticationResponse;
@@ -44,7 +44,7 @@ public class UserService {
      * @param user the login request
      * @return JwtAuthenticationResponse containing the JWT token
      */
-    public JwtAuthenticationResponse loginUser(LoginRequest user) {
+    public JwtAuthenticationResponse loginUser(LoginRequestDTO user) {
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
