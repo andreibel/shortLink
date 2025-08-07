@@ -68,8 +68,10 @@ export const NavBar = () => {
           </li>}
           {token && (
             <li
-              className=" sm:ml-0 -ml-1 bg-blue-400 text-white  cursor-pointer w-24 text-center font-semibold px-2 py-2 rounded-md  hover:text-slate-300   transition-all duration-150">
-              <Link to="/dashboard" onClick={() => setNavbarOpen(false)}>
+              className="hover:text-btnColor font-[500]  transition-all duration-150">
+              <Link className={`${
+                path === "/dashboard" ? "text-white font-semibold" : "text-gray-200"
+              }`} to="/dashboard" onClick={() => setNavbarOpen(false)}>
                 DashBoard
 
               </Link>
