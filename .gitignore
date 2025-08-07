@@ -1,101 +1,97 @@
-# -----------------------
-# 🗂 GENERAL IGNORE RULES
-# -----------------------
+#########################################
+# 🌍 GENERAL / OS / EDITOR IGNORE RULES #
+#########################################
+
+# Logs
 *.log
-*.env
-*.env.*      # .env.local, .env.production, etc.
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+debug.log
+
+# OS files
 .DS_Store
 Thumbs.db
+Icon?
+.Spotlight-V100
+.Trashes
+
+# IDE / Editor config
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Swap and temp
 *.swp
-*.swo
 *.tmp
 *.bak
 *.old
 
-# IDE / Editor settings
-.idea/
-.vscode/
-*.iml
-*.class
-*.ipr
-*.iws
-*.orig
-
-# Node / npm
+# Node modules (global catch-all just in case)
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 
-# System Files
-ehthumbs.db
-Desktop.ini
+# Environment files
+*.env
+*.env.*
+.env.local
+.env.development
+.env.production
+.env.test
 
-# Compiled binaries
-*.exe
-*.dll
-*.so
-*.out
-*.pyc
-*.pyo
-*.pyd
-__pycache__/
+#########################
+# ☕ SPRING BOOT BACKEND
+# Folder: shortLink
+#########################
 
-# Test coverage
-coverage/
-*.lcov
+# Compiled and generated files
+shortLink/target/
+shortLink/build/
+shortLink/.gradle/
+shortLink/*.class
+shortLink/*.jar
+shortLink/*.war
 
-# OS Files
-.DS_Store
-Icon?
-.Spotlight-V100
-.Trashes
-*.pid
+# IDE/Build tools
+shortLink/.idea/
+shortLink/.project
+shortLink/.classpath
+shortLink/*.iml
+shortLink/.settings/
+shortLink/mvnw
+shortLink/mvnw.cmd
+shortLink/.mvn/
 
-# -----------------------
-# 📦 BACKEND (Spring Boot)
-# -----------------------
-/backend/target/
-!/backend/src/main/resources/static/    # keep static if needed
-/backend/.env                           # sensitive env file
-/backend/*.jar
-/backend/*.war
+# Logs and environment
+shortLink/logs/
+shortLink/*.log
+shortLink/.env
 
-# Gradle
-/backend/.gradle/
-/backend/build/
-.gradle/
-/build/
+#########################
+# ⚛️ REACT FRONTEND
+# Folder: shortLintFrontEnd
+#########################
 
-# Maven
-/backend/logs/
-.mvn/
-.settings/
-.springBeans
+# Build output
+shortLintFrontEnd/build/
+shortLintFrontEnd/dist/
+shortLintFrontEnd/.next/
+shortLintFrontEnd/.cache/
+shortLintFrontEnd/.turbo/
 
-# IntelliJ
-/backend/.idea/
-/backend/*.iml
+# Dependency folders
+shortLintFrontEnd/node_modules/
 
-# Logs
-/backend/logs/
-*.log
+# Static file maps
+shortLintFrontEnd/public/static/*.*.map
 
-# -----------------------
-# 💻 FRONTEND (React)
-# -----------------------
-/frontend/node_modules/
-/frontend/.env
-/frontend/.env.*
-/frontend/.next/
-/frontend/dist/
-/frontend/build/
-frontend/public/static/*.*.map
-frontend/.cache/
-frontend/.parcel-cache/
-/frontend/.eslintcache
+# Testing and coverage
+shortLintFrontEnd/coverage/
+shortLintFrontEnd/junit.xml
 
-# React Native / Expo (if used)
-.expo/
-*.expo
+# Misc
+shortLintFrontEnd/.eslintcache
+shortLintFrontEnd/.env
+shortLintFrontEnd/.env.*
+shortLintFrontEnd/.parcel-cache/
