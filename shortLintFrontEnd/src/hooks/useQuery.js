@@ -15,9 +15,6 @@ export const useFetchMyShortUrls = (token, onError) => {
   });
 };
 
-
-
-
 export const useFetchTotalClicks = (token, onError) => {
   const now = new Date();
   const END_DATE = now.toISOString().slice(0, 10);
@@ -48,5 +45,32 @@ export const useFetchTotalClicks = (token, onError) => {
     },
     onError,
     staleTime: 5000,
+  });
+};
+
+
+export const useFetchAnalyticsData = ({ shortUrl, token, enabled = true, onError }) => {
+  const now = new Date();
+  const END_DATE = now.toISOString()
+  const START_DATE = new Date(now.getFullYear() - 1, 0, 1).toISOString()
+  console.log(`/api/urls/analytics/${shortUrl}?startDate=${START_DATE}&endDate=${END_DATE}`);
+  return useQuery({
+    queryKey: ["analytics-data", shortUrl],
+    enabled: enabled && !!shortUrl,
+    queryFn: async () => {
+      const { data } = await api.get(
+        `/api/urls/analytics/${shortUrl}?startDate=${START_DATE}&endDate=${END_DATE}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      return data;
+    },
+    onError,
+    staleTime: 1000 * 60 * 5,
   });
 };

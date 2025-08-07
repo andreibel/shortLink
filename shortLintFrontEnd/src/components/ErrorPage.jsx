@@ -11,7 +11,7 @@ const ErrorPage = ({ message }) => {
         Oops! Something went wrong.
       </h1>
       <p className='text-gray-600 mb-6 text-center'>
-        {message ? message : "An unexpected error has occured"}
+        {message ? message : "An unexpected error has occurred"}
       </p>
       <button onClick={() => {
         navigate("/");
