@@ -85,6 +85,16 @@ public class UrlMappingController {
         return ResponseEntity.ok(clickEventDTOS);
     }
 
+
+    @DeleteMapping("/{shortUrl}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> deleteUrlMapping(@PathVariable String shortUrl, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        urlMappingService.deleteUrlMapping(shortUrl, user);
+        return ResponseEntity.noContent().build();
+    }
+
+
     /**
      * Retrieves the total number of clicks per day for the authenticated user within a date range.
      *

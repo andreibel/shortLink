@@ -9,6 +9,7 @@ import com.andreibel.shortlink.repository.ClickEventRepository;
 import com.andreibel.shortlink.repository.UrlMappingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class UrlMappingService {
      * @param user the user creating the short URL
      * @return the created UrlMappingDTO
      */
+    @Transactional
     public UrlMappingDTO createShortUrl(String originalUrl, User user) {
         String shortUrl = generateShortUrl();
         UrlMapping urlMapping = new UrlMapping();
@@ -69,6 +71,7 @@ public class UrlMappingService {
         return dto;
     }
 
+
     private String generateShortUrl() {
         String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
@@ -87,6 +90,7 @@ public class UrlMappingService {
      * @param end the end datetime
      * @return list of ClickEventDTOs grouped by date, or null if URL not found
      */
+    @Transactional
     public List<ClickEventDTO> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
         if (urlMapping != null) {
@@ -112,6 +116,7 @@ public class UrlMappingService {
      * @param end the end date
      * @return map of LocalDate to click count
      */
+    @Transactional
     public Map<LocalDate, Long> getTotalClicksByUserAndDate(User user, LocalDate start, LocalDate end) {
         List<UrlMapping> urlMappings = urlMappingRepository.findByUser(user);
         List<ClickEvent> clickEvents = clickEventRepository.findByUrlMappingInAndClickDateBetween(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
@@ -126,6 +131,7 @@ public class UrlMappingService {
      * @param shortUrl the short URL
      * @return the UrlMapping, or null if not found
      */
+    @Transactional
     public UrlMapping getOriginalUrlByShortUrl(String shortUrl) {
         UrlMapping urlMapping = urlMappingRepository.findByShortUrl(shortUrl);
         if (urlMapping != null) {
@@ -140,5 +146,13 @@ public class UrlMappingService {
             clickEventRepository.save(clickEvent);
         }
         return urlMapping;
+    }
+
+    @Transactional
+    public void deleteUrlMapping(String shortUrl, User user) {
+        UrlMapping urlMapping = urlMappingRepository.findByShortUrlAndUser(shortUrl, user);
+        if (urlMapping != null) {
+            urlMappingRepository.delete(urlMapping);
+        }
     }
 }
