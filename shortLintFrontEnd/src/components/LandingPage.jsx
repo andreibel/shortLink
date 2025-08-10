@@ -3,6 +3,7 @@ import React from "react";
 import {motion} from "framer-motion";
 
 import Card from "./Card";
+import {Link} from "react-router-dom";
 
 let desc = "Generate short, memorable links with ease using shortLink’s intuitive interface. Share URLs effortlessly across platforms. Optimize your sharing strategy with shortLink. Track clicks and manage your links seamlessly to enhance your online presence. Generate short, memorable links with ease using shortLink’s intuitive interface. Share URLs effortlessly across platforms.";
 
@@ -22,6 +23,7 @@ const LandingPage = () => {
           transition={{duration: 0.8}}
           className="font-bold font-roboto text-slate-800 md:text-5xl sm:text-4xl text-3xl   md:leading-[55px] sm:leading-[45px] leading-10 lg:w-full md:w-[70%] w-full"
         >
+
           shortLink Simplifies URL Shortening For Efficient Sharing.
         </motion.h1>
         <p className="text-slate-700 text-sm my-5">
@@ -42,7 +44,10 @@ const LandingPage = () => {
 
             className="bg-custom-gradient  w-40 text-white rounded-md  py-2 hover:bg-custom-gradient-2"
           >
-            Manage Links
+            <Link to={"/dashboard"}>
+              Manage Links
+            </Link>
+
           </motion.button>
           <motion.button
             initial={{opacity: 0, y: 80}}
@@ -54,7 +59,10 @@ const LandingPage = () => {
             onClick={dashBoardNavigateHandler}
             className="border-btnColor border w-40 text-btnColor rounded-md  py-2 "
           >
-            Create Short Link
+            <Link to={"/register"}>
+              Create Short Link
+            </Link>
+
           </motion.button>
         </div>
       </div>

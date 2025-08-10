@@ -7,6 +7,9 @@ import { RxCross2 } from 'react-icons/rx';
 import api from '../../api/api';
 import toast from 'react-hot-toast';
 
+const ensureScheme = (u) =>
+  /^[a-zA-Z][\w+.-]*:\/\//.test(u) ? u : `https://${u}`;
+
 const CreateNewShorten = ({ setOpen, refetch }) => {
   const { token } = useStoreContext();
   const [loading, setLoading] = useState(false);
@@ -18,22 +21,29 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      originalUrl: "",
-    },
+    defaultValues: { originalUrl: "" },
     mode: "onTouched",
   });
 
   const createShortUrlHandler = async (data) => {
     setLoading(true);
     try {
-      const { data: res } = await api.post("/api/urls/shorten", data, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-        },
-      });
+      const raw = data.originalUrl?.trim() || "";
+      const normalized = ensureScheme(raw);
+      // throws if invalid – keeps things robust
+      new URL(normalized);
+
+      const { data: res } = await api.post(
+        "/api/urls/shorten",
+        { ...data, originalUrl: normalized },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
 
       const fullUrl = `${import.meta.env.VITE_REACT_FRONT_END_URL}/s/${res.shortUrl}`;
       setShortenUrl(fullUrl);
@@ -41,7 +51,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
       await refetch();
       reset();
     } catch (error) {
-      toast.error("Create ShortURL Failed: " );
+      toast.error("Create ShortURL Failed");
     } finally {
       setLoading(false);
     }
@@ -56,7 +66,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
         duration: 3000,
       });
       setOpen(false);
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy URL");
     }
   };
@@ -64,6 +74,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
   return (
     <div className="flex justify-center items-center bg-white rounded-md">
       <form
+        noValidate
         onSubmit={handleSubmit(createShortUrlHandler)}
         className="sm:w-[450px] w-[360px] relative shadow-custom pt-8 pb-5 sm:px-8 px-4 rounded-lg"
       >
@@ -77,8 +88,9 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
           label="Enter URL"
           required
           id="originalUrl"
-          placeholder="https://example.com"
-          type="url"
+          placeholder="example.com or https://example.com"
+          type="text"          // accept without scheme
+          inputMode="url"      // mobile URL keyboard
           message="Url is required"
           register={register}
           errors={errors}
@@ -87,6 +99,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
         <button
           className="bg-customRed font-semibold text-white w-32 bg-custom-gradient py-2 transition-colors rounded-md my-3"
           type="submit"
+          disabled={loading}
         >
           {loading ? "Loading..." : "Create"}
         </button>
@@ -107,7 +120,6 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
           <Tooltip title="Close">
             <button
               type="button"
-              disabled={loading}
               onClick={() => setOpen(false)}
               className="absolute right-2 top-2"
             >

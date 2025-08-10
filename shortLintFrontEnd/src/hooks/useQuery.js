@@ -1,4 +1,4 @@
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import api from "../api/api";
 
 export const useFetchMyShortUrls = (token, onError) => {
@@ -14,6 +14,32 @@ export const useFetchMyShortUrls = (token, onError) => {
     }, onError, staleTime: 10000,
   });
 };
+
+
+export const useDeleteUrl = ({ token, onSuccess, onError }) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (shortUrl) => {
+      const res = await api.delete(`/api/urls/${shortUrl}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data;
+    },
+    onSuccess: (data, variables) => {
+      // variables is the shortUrl you passed to mutate()
+      // default: refresh the list; you can also optimistically update if you want
+      queryClient.invalidateQueries({ queryKey: ["my-shortenurls"] });
+      onSuccess?.(data, variables);
+    },
+    onError,
+  });
+};
+
 
 export const useFetchTotalClicks = (token, onError) => {
   const now = new Date();
