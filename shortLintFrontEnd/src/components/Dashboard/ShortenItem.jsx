@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
-import React, { useState, useRef } from 'react';
-import { FaExternalLinkAlt, FaRegCalendarAlt } from 'react-icons/fa';
-import { IoCopy } from 'react-icons/io5';
-import { LiaCheckSolid } from 'react-icons/lia';
-import { MdAnalytics, MdOutlineAdsClick, MdDeleteForever } from 'react-icons/md';
-import { Link, useNavigate } from 'react-router-dom';
-import { useStoreContext } from '../../contextApi/ContextApi';
-import { Hourglass } from 'react-loader-spinner';
+import React, {useRef, useState} from 'react';
+import {FaExternalLinkAlt, FaRegCalendarAlt} from 'react-icons/fa';
+import {IoCopy} from 'react-icons/io5';
+import {LiaCheckSolid} from 'react-icons/lia';
+import {MdAnalytics, MdDeleteForever, MdOutlineAdsClick} from 'react-icons/md';
+import {Link, useNavigate} from 'react-router-dom';
+import {useStoreContext} from '../../contextApi/ContextApi';
+import {Hourglass} from 'react-loader-spinner';
 import Graph from './Graph';
-import { useFetchAnalyticsData, useDeleteUrl } from '../../hooks/useQuery.js';
+import {useDeleteUrl, useFetchAnalyticsData} from '../../hooks/useQuery.js';
 import toast from "react-hot-toast";
 import QRCode from 'react-qr-code';
 

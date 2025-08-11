@@ -1,4 +1,4 @@
-import AppRouter, { SubDomainRouter } from "../AppRouter";
+import AppRouter, {SubDomainRouter} from "../AppRouter";
 
 export const subDomainList = [
   {subdomain:"www", app: AppRouter, main: true},

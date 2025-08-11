@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import Graph from './Graph'
-import { useStoreContext } from '../../contextApi/ContextApi'
-import { useFetchMyShortUrls, useFetchTotalClicks } from '../../hooks/useQuery'
+import {useStoreContext} from '../../contextApi/ContextApi'
+import {useFetchMyShortUrls, useFetchTotalClicks} from '../../hooks/useQuery'
 import ShortenPopUp from './ShortenPopUp'
-import { FaLink } from 'react-icons/fa'
+import {FaLink} from 'react-icons/fa'
 import ShortenUrlList from './ShortenUrlList'
-import { useNavigate } from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import Loader from '../Loader'
 
 const DashboardLayout = () => {

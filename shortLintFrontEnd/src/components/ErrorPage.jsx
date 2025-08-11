@@ -1,6 +1,6 @@
 import React from 'react'
-import { FaExclamationTriangle } from 'react-icons/fa'
-import { useNavigate } from 'react-router-dom'
+import {FaExclamationTriangle} from 'react-icons/fa'
+import {useNavigate} from 'react-router-dom'
 
 const ErrorPage = ({ message }) => {
   const navigate = useNavigate();

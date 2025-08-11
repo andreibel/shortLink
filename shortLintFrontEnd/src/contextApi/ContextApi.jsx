@@ -2,7 +2,7 @@ import {createContext, useContext, useState} from "react";
 
 /**
  * React Context for global state management.
- * Provides access to authentication token and its setter.
+ * Provides access to the authentication token and its setter.
  * @type {React.Context<{token: string|null, setToken: function}>}
  */
 const ContextApi = createContext();

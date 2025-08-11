@@ -1,5 +1,5 @@
-import { Navigate } from "react-router-dom";
-import { useStoreContext } from "./contextApi/ContextApi";
+import {Navigate} from "react-router-dom";
+import {useStoreContext} from "./contextApi/ContextApi";
 
 export default function PrivateRoute({ children, publicPage}) {
   const { token } = useStoreContext();

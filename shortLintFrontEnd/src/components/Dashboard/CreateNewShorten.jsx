@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useStoreContext } from '../../contextApi/ContextApi';
-import { useForm } from 'react-hook-form';
+import React, {useState} from 'react';
+import {useStoreContext} from '../../contextApi/ContextApi';
+import {useForm} from 'react-hook-form';
 import TextField from '../TextField';
-import { Tooltip } from '@mui/material';
-import { RxCross2 } from 'react-icons/rx';
+import {Tooltip} from '@mui/material';
+import {RxCross2} from 'react-icons/rx';
 import api from '../../api/api';
 import toast from 'react-hot-toast';
 

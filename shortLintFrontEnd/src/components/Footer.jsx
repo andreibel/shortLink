@@ -1,5 +1,5 @@
 import React from "react";
-import {FaFacebook, FaTwitter, FaInstagram, FaLinkedin} from "react-icons/fa";
+import {FaFacebook, FaInstagram, FaLinkedin, FaTwitter} from "react-icons/fa";
 
 const Footer = () => {
   return (<footer className="bg-custom-gradient text-white py-8 z-40 relative">
