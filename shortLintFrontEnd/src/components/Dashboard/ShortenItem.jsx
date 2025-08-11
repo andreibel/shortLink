@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FaExternalLinkAlt, FaRegCalendarAlt } from 'react-icons/fa';
 import { IoCopy } from 'react-icons/io5';
 import { LiaCheckSolid } from 'react-icons/lia';
@@ -10,13 +10,17 @@ import { Hourglass } from 'react-loader-spinner';
 import Graph from './Graph';
 import { useFetchAnalyticsData, useDeleteUrl } from '../../hooks/useQuery.js';
 import toast from "react-hot-toast";
+import QRCode from 'react-qr-code';
 
 const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdDate }) => {
   const { token } = useStoreContext();
   const navigate = useNavigate();
+
   const [isCopied, setIsCopied] = useState(false);
   const [analyticToggle, setAnalyticToggle] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState("");
+
+  const qrWrapRef = useRef(null); // off-screen SVG container for PNG export
 
   const subDomain = import.meta.env.VITE_REACT_FRONT_END_URL.replace(/^https?:\/\//, "");
   const fullShortUrl = `${import.meta.env.VITE_REACT_FRONT_END_URL}/s/${shortUrl}`;
@@ -59,13 +63,70 @@ const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdDate }) => {
   };
 
   const handleRemove = (shortCode) => {
-    // optional confirm:
     // if (!confirm("Delete this short link?")) return;
     deleteUrl(shortCode);
   };
 
+  // Create PNG from the off-screen SVG and share (mobile) or download (desktop)
+  const downloadOrSharePng = async (scale = 4) => {
+    const svg = qrWrapRef.current?.querySelector("svg");
+    if (!svg) return;
+
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const img = new Image();
+    img.onload = async () => {
+      const size = Number(svg.getAttribute("width") || 256);
+      const S = size * scale; // upscale for crisp output
+      const canvas = document.createElement("canvas");
+      canvas.width = S; canvas.height = S;
+      const ctx = canvas.getContext("2d");
+
+      // white background improves scanning
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, S, S);
+      ctx.drawImage(img, 0, 0, S, S);
+
+      const toBlob = () => new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+      let blob = await toBlob();
+      if (!blob) {
+        // Safari fallback
+        const dataURL = canvas.toDataURL("image/png");
+        const res = await fetch(dataURL);
+        blob = await res.blob();
+      }
+
+      const file = new File([blob], `qr-${shortUrl}.png`, { type: "image/png" });
+
+      // Share if supported (mobile)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "QR code", text: fullShortUrl });
+          return;
+        } catch {
+          // fall through to download
+        }
+      }
+
+      // Download (desktop / fallback)
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `qr-${shortUrl}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgData);
+  };
+
   return (
     <div className="bg-slate-100 shadow-lg border border-dotted border-slate-500 px-6 sm:py-1 py-3 rounded-md transition-all duration-100">
+      {/* OFF-SCREEN QR (SVG source for PNG export) */}
+      <div style={{ position: "absolute", left: -99999, top: -99999 }} aria-hidden ref={qrWrapRef}>
+        <QRCode value={fullShortUrl} size={256} level="M" includeMargin />
+      </div>
+
       <div className="flex sm:flex-row flex-col sm:justify-between w-full sm:gap-0 gap-5 py-5">
         <div className="flex-1 sm:space-y-1 max-w-full overflow-x-auto overflow-y-hidden">
           <div className="text-slate-900 pb-1 sm:pb-0 flex items-center gap-2">
@@ -97,7 +158,7 @@ const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdDate }) => {
           </div>
         </div>
 
-        <div className="flex flex-1 sm:justify-end items-center gap-4">
+        <div className="flex flex-col sm:flex-row flex-1 sm:justify-end items-center gap-2 sm:gap-4">
           <button
             onClick={handleCopyClick}
             disabled={isDeleting}
@@ -116,6 +177,18 @@ const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdDate }) => {
             <MdAnalytics className="text-md" />
           </button>
 
+
+
+          {/* QR PNG action */}
+          <button
+            onClick={() => downloadOrSharePng(4)} // 256*4 => 1024px PNG
+            disabled={isDeleting}
+            className="flex cursor-pointer gap-1 items-center bg-emerald-600 py-2 font-semibold shadow-md shadow-slate-500 px-6 rounded-md text-white disabled:opacity-60"
+            title="Download/Share QR (PNG)"
+          >
+            QR (PNG)
+          </button>
+
           <button
             onClick={() => handleRemove(shortUrl)}
             disabled={isDeleting}
@@ -132,7 +205,7 @@ const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdDate }) => {
       <div className={`${analyticToggle ? "flex" : "hidden"} max-h-96 sm:mt-0 mt-5 min-h-96 relative border-t-2 w-full overflow-hidden`}>
         {loader ? (
           <div className="min-h-[calc(450px-140px)] flex justify-center items-center w/full">
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col justify-center items-center gap-1">
               <Hourglass visible height="50" width="50" ariaLabel="hourglass-loading" colors={['#306cce', '#72a1ed']} />
               <p className="text-slate-700">Please Wait...</p>
             </div>
